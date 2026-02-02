@@ -1,31 +1,33 @@
-# 🤖 AI Job Analyzer & Strategy Generator
+# 🎯 PreApply — Prepare Before You Apply
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](LINK_STREAMLIT_CLOUD_ANDA_DISINI)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://preapply.streamlit.app/)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
 [![Powered by Gemini](https://img.shields.io/badge/AI-Google%20Gemini-orange)](https://deepmind.google/technologies/gemini/)
 
-**An intelligent career consultant tool that helps job seekers tailor their applications perfectly to specific job descriptions.**
+**Your personal AI Career Consultant. Tailor your CV, draft cover letters, and prep for interviews in seconds.**
+
+**[Try the Live App Here](https://preapply.streamlit.app/)**
 
 This application uses Large Language Models (LLM) to perform gap analysis between a candidate's CV and a target job description, providing actionable feedback, rewritten content, and interview preparation strategies.
 
 ## 🚀 Features
 
-* **📄 PDF Resume Parsing:** Extracts text safely from PDF CVs/Resumes.
-* **📊 Smart Gap Analysis:** Identifies matching skills and missing requirements with a match score.
-* **✨ Magic Bullet Points:** Rewrites weak CV points into impactful, action-oriented statements using the STAR method, tailored to the job's language.
-* **✉️ Tailored Cover Letter:** Generates a complete draft based on the candidate's actual strengths and the company's context.
-* **🎤 Interview Simulation:** Predicts "Tricky Questions" based on specific CV gaps and provides storytelling-based answers.
-* **🌍 Hybrid Language Support:** Explains strategies in Indonesian (for understanding) while generating application assets in the job's native language (English/Indo).
-* **🔒 Privacy-First:** Stateless architecture. No data is stored; files are processed in RAM and wiped after the session.
+* **📊 Smart Gap Analysis:** Instant match score with actionable insights on missing skills.
+* **✨ Magic Bullet Points:** Rewrites your weak CV points into impactful, STAR-method achievements tailored to the job description.
+* **✉️ Tailored Cover Letter:** Drafts a ready-to-send letter in the job's native language (English/Indonesian).
+* **🎤 Interview Simulation:** Predicts tricky questions based on *your* specific CV gaps and provides storytelling-based answers.
+* **🔒 Privacy-First:** Stateless architecture. Your files are processed in RAM and wiped immediately after the session.
 
 ## 🛠️ Tech Stack
 
-* **Framework:** [Streamlit](https://streamlit.io/)
-* **LLM Engine:** Google Gemini 2.0 Flash (via `google-genai` SDK)
-* **PDF Processing:** `pypdf`
+* **Frontend:** [Streamlit](https://streamlit.io/)
+* **AI Engine:** Google Gemini 2.0 Flash (via `google-genai` SDK)
+* **Parser:** `pypdf` for secure PDF text extraction
 * **Language:** Python
 
 ## 📦 How to Run Locally
+
+If you want to run this application on your own machine:
 
 1.  **Clone the repository**
     ```bash
@@ -57,20 +59,13 @@ This application uses Large Language Models (LLM) to perform gap analysis betwee
     streamlit run app.py
     ```
 
-## 💡 How It Works (Prompt Engineering)
+## 💡 How It Works
 
 The application utilizes a **Chain-of-Thought** prompting strategy with specific constraints:
 1.  **Role Playing:** Acts as a "Senior Tech Recruiter".
-2.  **Context Injection:** Feeds the parsed PDF and Job Description raw text.
+2.  **Context Injection:** Feeds the parsed PDF and Job Description raw text to the LLM.
 3.  **Strict Formatting:** Uses specific separators to parse the AI's output into clean UI tabs.
 4.  **Tone Calibration:** Balances professional criticism with encouraging solutions.
-
-## 🔒 Privacy Policy
-
-This is a portfolio project designed with security in mind:
-* **No Database:** User data is not persisted.
-* **Ephemeral Processing:** Files are processed in memory and discarded immediately.
-* **API Usage:** Data is sent to Google Gemini API solely for analysis during the active session.
 
 ## 👨‍💻 Author
 
@@ -79,4 +74,4 @@ This is a portfolio project designed with security in mind:
 * [LinkedIn](https://www.linkedin.com/in/albinurrosif/)
 
 ---
-*If you find this tool useful, please give it a star ⭐!*
+*© 2026 PreApply. Automated by Albi Nur Rosif.*

@@ -7,7 +7,7 @@ import pypdf
 # Configure Streamlit interface
 def configure_interface():
     """Configure the Streamlit interface for the Job Analyzer AI app."""
-    st.set_page_config(page_title="Job Analyzer AI", page_icon="🤖", layout="centered")
+    st.set_page_config(page_title="PreApply — Prepare Before You Apply", page_icon="🤖", layout="centered")
     
     # Custom CSS untuk Footer dan Tampilan
     st.markdown("""
@@ -40,7 +40,8 @@ def configure_interface():
         </style>
     """, unsafe_allow_html=True)
     
-    st.header("🤖 AI Job Analyzer & Strategy Generator")
+    st.header("🤖 PreApply")
+    st.subheader("Prepare Before You Apply with AI Assistance")
     st.caption("Upload your CV and paste the Job Description. Let AI find the gaps, rewrite your bullet points, and draft your cover letter.")
 
 # Fetch AI API key
@@ -275,7 +276,7 @@ def main():
     with f_col2:
         st.markdown("""
                     <div style='text-align: center; color: #888; font-size: 14px;'>
-                    © 2026 AI Job Analyzer • Automated by
+                    © 2026 PreApply • Automated by
                     <a href="https://albinur.vercel.app/" target="_blank">Albinurr 🤖</a>
                     </div>
                     """, unsafe_allow_html=True)
