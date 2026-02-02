@@ -82,6 +82,7 @@ def reset_page():
     # File uploader does not support resetting, so we skip it.
     if "analyze_result" in st.session_state:
         del st.session_state["analyze_result"]
+    st.session_state["is_running"] = False
 
 @st.dialog("ℹ️ Privacy & Security Policy")
 def show_privacy_policy():
@@ -185,6 +186,12 @@ def main():
     configure_interface()
     api_key = get_api_key()
     
+    if "is_running" not in st.session_state:
+        st.session_state.is_running = False
+    
+    def start_analysis():
+        st.session_state.is_running = True
+    
 
     # Streamlit input fields
     role = st.text_input("Enter the Job Role Description", placeholder="e.g., Software Engineer, Data Analyst, etc.", key="role_key")
@@ -200,30 +207,37 @@ def main():
 
     col_btn1, col_btn2, col_btn3 = st.columns([2, 1, 1])
     with col_btn1:
-        analyze_button = st.button("Analyze", type="primary", use_container_width=True, disabled=st.session_state.get("is_running", False))
+        analyze_button = st.button("Analyze", type="primary", use_container_width=True, disabled=st.session_state.is_running, on_click=start_analysis)
     with col_btn2:
         clear_button = st.button("Reset", type="secondary", use_container_width=True, on_click=reset_page)
     with col_btn3:
         st.empty()
     
-    if analyze_button:
+    if st.session_state.is_running:
         st.session_state["is_running"] = True
         if not role or not company or not job_type or not job_description or not uploaded_cv:
             st.warning("⚠️ Please fill in all the required fields.")
+            st.session_state["is_running"] = False
         else:
+            # Extract CV text
             cv_text = extract_text_from_pdf(uploaded_cv) if uploaded_cv.type == "application/pdf" else str(uploaded_cv.read(), "utf-8")
+
             if cv_text:
+                # Prepare user data
                 user_data = {
                     "role": role,
                     "company": company,
                     "job_type": job_type,
                     "job_description": job_description
                 }
+                # Analyze
                 analyze_result = analyze_match(api_key, user_data, cv_text)
+
                 if analyze_result is None:
                     st.warning("⚠️ AI API quota exceeded. Please try again tomorrow.")
                 st.session_state["analyze_result"] = analyze_result
-        st.session_state["is_running"] = False
+                st.session_state["is_running"] = False
+                st.rerun()
 
     if "analyze_result" in st.session_state:
         result = st.session_state["analyze_result"]
@@ -238,7 +252,6 @@ def main():
             st.divider()
         
             try:
-            
                 parts = result.split("### SECTION_SPLIT ###")
             
                 tab1,tab2,tab3,tab4 = st.tabs(["📊 Analysis & Gaps", 

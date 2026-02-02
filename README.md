@@ -21,7 +21,7 @@ This application uses Large Language Models (LLM) to perform gap analysis betwee
 ## 🛠️ Tech Stack
 
 * **Frontend:** [Streamlit](https://streamlit.io/)
-* **AI Engine:** Google Gemini 2.0 Flash (via `google-genai` SDK)
+* **AI Engine:** Google Gemini 2.5 Flash (via `google-genai` SDK)
 * **Parser:** `pypdf` for secure PDF text extraction
 * **Language:** Python
 
@@ -31,7 +31,7 @@ If you want to run this application on your own machine:
 
 1.  **Clone the repository**
     ```bash
-    git clone [https://github.com/USERNAME_ANDA/NAMA_REPO_ANDA.git](https://github.com/USERNAME_ANDA/NAMA_REPO_ANDA.git)
+    git clone [https://github.com/albinurrosif/AI-Job-Analyzer-Strategy-Generator.git](https://github.com/albinurrosif/AI-Job-Analyzer-Strategy-Generator.git)
     cd NAMA_REPO_ANDA
     ```
 
