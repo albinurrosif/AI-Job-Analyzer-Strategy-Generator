@@ -3,8 +3,16 @@ from google import genai
 from google.genai import types
 from google.api_core import exceptions
 import pypdf
+import re
 
-# Configure Streamlit interface
+try:
+    from automation_service import send_to_n8n
+    AUTOMATION_ACTIVE = True
+except ImportError:
+    AUTOMATION_ACTIVE = False
+
+
+# Configuration and UI Setup
 def configure_interface():
     """Configure the Streamlit interface for the Job Analyzer AI app."""
     st.set_page_config(page_title="PreApply — Prepare Before You Apply", page_icon="🤖", layout="centered")
@@ -44,7 +52,7 @@ def configure_interface():
     st.subheader("Prepare Before You Apply with AI Assistance")
     st.caption("Upload your CV and paste the Job Description. Let AI find the gaps, rewrite your bullet points, and draft your cover letter.")
 
-# Fetch AI API key
+
 def get_api_key():
     """Get the API key from Streamlit secrets."""
     try:
@@ -72,18 +80,19 @@ def extract_text_from_pdf(file):
         st.error(f"Error reading PDF file: {e}")
         return ""
 
-# Reset Streamlit page
+
 def reset_page():
     """Reset the Streamlit page to its initial state."""
     st.session_state["role_key"] = ""
     st.session_state["company_key"] = ""
     st.session_state["job_type_key"] = ""
     st.session_state["job_description_key"] = ""
-    # File uploader does not support resetting, so we skip it.
+    st.session_state["uploaded_cv_key"] = None
     if "analyze_result" in st.session_state:
         del st.session_state["analyze_result"]
     st.session_state["is_running"] = False
 
+# modal dialog
 @st.dialog("ℹ️ Privacy & Security Policy")
 def show_privacy_policy():
     st.markdown("""
@@ -101,7 +110,7 @@ def show_privacy_policy():
 def analyze_match(api_key, data, cv_text):
     try:
         client = genai.Client(api_key=api_key)
-        # PROMPT DENGAN SEPARATOR '### SECTION_SPLIT ###'
+
         prompt = f"""
         Role: Expert Tech Recruiter & CV Writer.
         Target Role: {data['role']} at {data['company']} ({data['job_type']}).
@@ -176,12 +185,11 @@ def analyze_match(api_key, data, cv_text):
 
 
 
+######################################################################################## main ############################################################################################
 
 
-
-# Main Streamlit app
 def main():
-    """UI for the Job Analyzer AI app."""
+    """ Main function to run the Streamlit app."""
 
     configure_interface()
     api_key = get_api_key()
@@ -278,6 +286,40 @@ def main():
                     st.info("Practice these questions and answers to ace your interview.")
                     if len(parts) > 3:
                         st.markdown(parts[3])
+            
+                st.divider()
+                
+                if AUTOMATION_ACTIVE:
+                    st.markdown("### 🚀 Aplication Pipeline Tracker")
+                    st.caption("Satisfied with the result? Send to Job Apllication Tracker")
+                    
+                    col1, col2 = st.columns([1,3])
+                    
+                    with col1:
+                        if st.button("Save to Tracker"):
+                            
+                            with st.spinner("Sending data to N8N..."):
+                                # get ai result
+                                full_text = st.session_state.get("analyze_result","")
+                                
+                                # search the anchor word with regex
+                                # Cari teks yang polanya: "MATCH SCORE:" diikuti spasi, lalu Angka
+                                # r"MATCH SCORE:\s*(\d+)%"
+                                # \s* = spasi (boleh ada boleh tidak)
+                                # (\d+) = ambil angkanya
+                                match = re.search(r"MATCH SCORE:\s*(\d+)%", full_text)
+                                
+                                if match:
+                                    match_score = match.group(1) + "%"
+                                else:
+                                    match_score = "Analyzed"
+
+                                success, message = send_to_n8n(company, role, match_score)
+                                if success:
+                                    st.success(f"Data sent to N8N Tracker! {match_score}")
+                                    st.balloons()
+                                else:
+                                    st.error(message)
 
             except Exception as e:
                 st.error(f"An error occurred while processing the AI response: {e}")
