@@ -293,7 +293,7 @@ def main():
                     st.markdown("### 🚀 Aplication Pipeline Tracker")
                     st.caption("Satisfied with the result? Send to Job Apllication Tracker")
                     
-                    col1, col2 = st.columns([1,3])
+                    col1, col2 = st.columns([1,2])
                     
                     with col1:
                         if st.button("Save to Tracker"):
@@ -316,7 +316,7 @@ def main():
 
                                 success, message = send_to_n8n(company, role, match_score)
                                 if success:
-                                    st.success(f"Data sent to N8N Tracker! {match_score}")
+                                    st.success(f"Data sent to N8N Tracker!")
                                     st.balloons()
                                 else:
                                     st.error(message)
