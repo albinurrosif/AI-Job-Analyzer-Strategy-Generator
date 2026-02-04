@@ -2,7 +2,7 @@ import requests
 import streamlit as st
 from datetime import datetime
 
-WEBHOOK_URL = "https://albinurr.app.n8n.cloud/webhook-test/log-job"
+WEBHOOK_URL = "https://albinurr.app.n8n.cloud/webhook/log-job"
 
 def send_to_n8n(company_name, role_name, match_score):
     """
