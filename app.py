@@ -141,8 +141,9 @@ def analyze_match(api_key, data, cv_text):
         [BAGIAN 1: GAP ANALYSIS]
         (Bahasa: INDONESIA)
         1.  **MATCH SCORE:** Tulis skor dalam format HTML ini agar besar dan berwarna hijau:
-            `<h2 style='text-align: center; color: #28a745; border: 2px dashed #28a745; padding: 15px; border-radius: 10px; margin-bottom: 20px;'>MATCH SCORE: [MASUKKAN ANGKA]%</h2>`
-    
+            `<h2 style='text-align: center; color: #28a745; border: 2px dashed #28a745; padding: 15px; border-radius: 10px; margin-bottom: 20px;'>MATCH SCORE: [MASUKKAN ANGKA]%</h2>`.
+            beri sedikit jarak
+
         2. Analisa
             - ✅ Kekuatan (Match):
             - ⚠️ Kekurangan (Gap):
@@ -296,7 +297,7 @@ def main():
                     st.info("Practice these questions and answers to ace your interview.")
                     if len(parts) > 3:
                         st.markdown(parts[3])
-            
+                st.balloons()
                 st.divider()
                 
                 if AUTOMATION_ACTIVE:
@@ -331,7 +332,7 @@ def main():
                                     st.balloons()
                                 else:
                                     st.error(message)
-                st.balloons()
+                
             except Exception as e:
                 st.error(f"An error occurred while processing the AI response: {e}")
                 st.markdown(st.session_state["analyze_result"])

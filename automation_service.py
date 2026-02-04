@@ -24,8 +24,19 @@ def send_to_n8n(company_name, role_name, match_score):
         "source": "PreApply App"
     }
     
+    st.write(f"**1. URL Target:** `{WEBHOOK_URL}`")
+    st.write(f"**2. Data yang dikirim:** Company={company_name}, Role={role_name}, Score={match_score}")
+    
     try:
         response = requests.post(WEBHOOK_URL, json=payload, headers=headers, timeout=5)
+        
+        # 3. CEK STATUS CODE
+        st.write(f"**3. HTTP Status Code:** `{response.status_code}`")
+                                    
+        # 4. CEK RESPON BODY (INI KUNCINYA!)
+        # N8N biasanya memberi tahu KENAPA dia menolak (misal: "workflow not active")
+        st.write("**4. Response Text dari N8N:**")
+        st.code(response.text)
         
         if response.status_code == 200:
             return True, "Succefully sent to N8N Tracker"
