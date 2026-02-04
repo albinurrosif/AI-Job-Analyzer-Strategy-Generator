@@ -141,10 +141,11 @@ def analyze_match(api_key, data, cv_text):
         (Bahasa: INDONESIA)
         1.  **MATCH SCORE:** Tulis skor dalam format HTML ini agar besar dan berwarna hijau:
             `<h2 style='text-align: center; color: #28a745; border: 2px dashed #28a745; padding: 15px; border-radius: 10px; margin-bottom: 20px;'>MATCH SCORE: [MASUKKAN ANGKA]%</h2>`
-        2.  Analisis Jujur:
-            - ✅ Kekuatan (Match)
-            - ⚠️ Kekurangan (Gap)
-            - 💡 Strategi Singkat (Solusi menutup gap)
+    
+        2. Analisa
+            - ✅ Kekuatan (Match):
+            - ⚠️ Kekurangan (Gap):
+            - 💡 Strategi Singkat (Solusi menutup gap):  (termasuk menyarankan untuk melakukan atau mempelajari hal-hal essential yang sebaiknya ada di cv sebelum melamar)
     
         ### SECTION_SPLIT ###
     
@@ -154,8 +155,8 @@ def analyze_match(api_key, data, cv_text):
         - **Keywords & Contoh Kalimat (Rewrites):** Gunakan BAHASA YANG SAMA DENGAN JOB DESC (Inggris/Indo).
     
         Isi:
-        1. Daftar ATS Keywords yang wajib ada.
-        2. **MAGIC BULLET POINTS:** Pilih 3 poin terlemah di CV saya, berikan kritik singkat (Indo), lalu tulis ulang kalimatnya (Bahasa Lowongan) dengan format 'Action Verb + Result'.
+        1. Daftar ATS Keywords yang sebaiknya ada.
+        2. **MAGIC BULLET POINTS:** (Pilih 3 poin terlemah di CV saya, berikan kritik singkat (Indo), lalu tulis ulang kalimatnya (Bahasa Lowongan) dengan format 'Action Verb + Result'.)
     
         ### SECTION_SPLIT ###
     
@@ -190,6 +191,9 @@ def analyze_match(api_key, data, cv_text):
 
 def main():
     """ Main function to run the Streamlit app."""
+    
+    if "validation_error" not in st.session_state:
+        st.session_state.validation_error = None
 
     configure_interface()
     api_key = get_api_key()
@@ -220,12 +224,17 @@ def main():
         clear_button = st.button("Reset", type="secondary", use_container_width=True, on_click=reset_page)
     with col_btn3:
         st.empty()
+        
+    if st.session_state.validation_error:
+        st.warning(st.session_state.validation_error)
+        st.session_state.validation_error = None
     
     if st.session_state.is_running:
         st.session_state["is_running"] = True
         if not role or not company or not job_type or not job_description or not uploaded_cv:
-            st.warning("⚠️ Please fill in all the required fields.")
+            st.session_state.validation_error = "⚠️ Please fill in all the required fields."
             st.session_state["is_running"] = False
+            st.rerun()
         else:
             # Extract CV text
             cv_text = extract_text_from_pdf(uploaded_cv) if uploaded_cv.type == "application/pdf" else str(uploaded_cv.read(), "utf-8")
