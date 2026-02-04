@@ -4,6 +4,7 @@ from google.genai import types
 from google.api_core import exceptions
 import pypdf
 import re
+import time
 
 try:
     from automation_service import send_to_n8n
@@ -308,6 +309,7 @@ def main():
                         if st.button("Save to Tracker"):
                             
                             with st.spinner("Sending data to N8N..."):
+                                time.sleep(1)
                                 # get ai result
                                 full_text = st.session_state.get("analyze_result","")
                                 
@@ -329,7 +331,7 @@ def main():
                                     st.balloons()
                                 else:
                                     st.error(message)
-
+                st.balloons()
             except Exception as e:
                 st.error(f"An error occurred while processing the AI response: {e}")
                 st.markdown(st.session_state["analyze_result"])

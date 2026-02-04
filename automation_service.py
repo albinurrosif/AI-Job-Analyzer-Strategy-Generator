@@ -10,6 +10,11 @@ def send_to_n8n(company_name, role_name, match_score):
     Membungkus data -> Kirim ke N8N -> Lapor Berhasil/Gagal.
     """
     
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        "Content-Type": "application/json"
+    }
+    
     # N8N needs JSON format
     payload = {
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -20,7 +25,7 @@ def send_to_n8n(company_name, role_name, match_score):
     }
     
     try:
-        response = requests.post(WEBHOOK_URL, json=payload, timeout=5)
+        response = requests.post(WEBHOOK_URL, json=payload, headers=headers, timeout=5)
         
         if response.status_code == 200:
             return True, "Succefully sent to N8N Tracker"
