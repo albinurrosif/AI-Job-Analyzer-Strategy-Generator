@@ -98,11 +98,14 @@ def reset_page():
 def show_privacy_policy():
     st.markdown("""
     **Data Privacy Policy:**
-    * This application is stateless.
-    * Your CV and Job Description are processed by Google Gemini AI in RAM.
-    * No data is saved to any database or disk.
-    * All session data is wiped when you refresh or close the tab.
-    """)
+    * **Stateless Design:** Your CV and Job Description are processed in RAM.
+    * **No Database:** We do not store your uploaded files or AI results.
+    * **Zero Retention:** All data is wiped instantly when you close the tab.
+    
+    ---
+    *For Developers/Owners:*
+    * <small>The "Tracker" feature is an optional integration that requires a manual configuration key. It is disabled by default for all public users.</small>
+    """, unsafe_allow_html=True)
     st.caption("Automated by Albinurr")
 
 
@@ -113,7 +116,7 @@ def analyze_match(api_key, data, cv_text):
         client = genai.Client(api_key=api_key)
 
         prompt = f"""
-        Role: Expert Tech Recruiter & CV Writer.
+        Role: Expert Recruiter & CV Writer.
         Target Role: {data['role']} at {data['company']} ({data['job_type']}).
     
         JOB DESCRIPTION:
@@ -206,11 +209,51 @@ def main():
     def start_analysis():
         st.session_state.is_running = True
     
+    is_admin = False
+    
+    # Sidebar for experimental feature configuration
+    # --- SETUP ADMIN (SELF-EXPLANATORY TOGGLE) ---
+    is_admin = False 
+    
+    with st.sidebar:
+        st.write("") # Spacer
+        
+        # 1. Toggle dengan Penjelasan (Tooltip)
+        # Saat mouse diarahkan ke tanda tanya (?), user akan membaca fungsinya.
+        enable_tracker = st.toggle(
+            "🛠️ Enable Tracker Module",
+            help="Activates the integration to save job data to Google Sheets. Requires an Access Key."
+        )
+        
+        # 2. Logika Penjelasan Otomatis
+        if enable_tracker:
+            # Begitu dinyalakan, beri konteks DULU sebelum minta password
+            st.info(
+                """
+                ℹ️ **Developer Only**
+                This module connects to the owner's personal automation pipeline (n8n).
+                """
+            )
+            
+            # Baru minta password
+            input_pass = st.text_input("Access Key", type="password")
+            
+            real_pass = st.secrets.get("ADMIN_PASSWORD", "admin")
+            if input_pass == real_pass:
+                is_admin = True
+                st.success("✅ Feature Unlocked")
+            elif input_pass:
+                st.error("Invalid Key")
+            
+            # Call to Action untuk User Guest yang penasaran
+            st.markdown("---")
+            st.caption("Want to use this for yourself?")
+            st.markdown("[Check source code on GitHub](https://github.com/username/repo)")
 
     # Streamlit input fields
-    role = st.text_input("Enter the Job Role Description", placeholder="e.g., Software Engineer, Data Analyst, etc.", key="role_key")
     uploaded_cv = st.file_uploader("Upload Your CV (PDF or TXT)", type=["pdf", "txt"], key="uploaded_cv_key")
     st.caption("🔒 *Privacy Note: Files are processed in memory and not stored.*")
+    role = st.text_input("Enter the Job Role Description", placeholder="e.g., Software Engineer, Data Analyst, etc.", key="role_key")
     col1, col2 = st.columns(2)
     with col1:
         company = st.text_input("Company Name", placeholder="e.g., Google (Tech), BCA (Finance)", key="company_key")
@@ -301,38 +344,52 @@ def main():
                 st.divider()
                 
                 if AUTOMATION_ACTIVE:
-                    st.markdown("### 🚀 Aplication Pipeline Tracker")
-                    st.caption("Satisfied with the result? Send to Job Apllication Tracker")
-                    
-                    col1, col2 = st.columns([1,2])
-                    
-                    with col1:
-                        if st.button("Save to Tracker"):
-                            
-                            with st.spinner("Sending data to N8N..."):
-                                time.sleep(1)
-                                # get ai result
-                                full_text = st.session_state.get("analyze_result","")
+                    if is_admin:
+                        st.markdown("### 🚀 Aplication Pipeline Tracker")
+                        st.caption("Satisfied with the result? Send to Job Apllication Tracker Sheets")
+                        
+                        col1, col2 = st.columns([1,2])
+                        
+                        with col1:
+                            if st.button("Save to Tracker"):
                                 
-                                # search the anchor word with regex
-                                # Cari teks yang polanya: "MATCH SCORE:" diikuti spasi, lalu Angka
-                                # r"MATCH SCORE:\s*(\d+)%"
-                                # \s* = spasi (boleh ada boleh tidak)
-                                # (\d+) = ambil angkanya
-                                match = re.search(r"MATCH SCORE:\s*(\d+)%", full_text)
-                                
-                                if match:
-                                    match_score = match.group(1) + "%"
-                                else:
-                                    match_score = "Analyzed"
+                                with st.spinner("Sending data to Automation Pipeline..."):
+                                    time.sleep(1)
+                                    # get ai result
+                                    full_text = st.session_state.get("analyze_result","")
+                                    
+                                    # search the anchor word with regex
+                                    # Cari teks yang polanya: "MATCH SCORE:" diikuti spasi, lalu Angka
+                                    # r"MATCH SCORE:\s*(\d+)%"
+                                    # \s* = spasi (boleh ada boleh tidak)
+                                    # (\d+) = ambil angkanya
+                                    match = re.search(r"MATCH SCORE:\s*(\d+)%", full_text)
+                                    
+                                    if match:
+                                        match_score = match.group(1) + "%"
+                                    else:
+                                        match_score = "Analyzed"
 
-                                success, message = send_to_n8n(company, role, match_score)
-                                if success:
-                                    st.success(f"Data sent to N8N Tracker!")
-                                    st.balloons()
-                                else:
-                                    st.error(message)
-                
+                                    success, message = send_to_n8n(company, role, match_score)
+                                    if success:
+                                        st.success(f"Data sent to N8N Tracker!")
+                                        st.balloons()
+                                    else:
+                                        st.error(message)
+                    else:
+                        st.markdown("### 🚀 Application Pipeline Tracker")
+                        st.info("ℹ️ **Integration Not Configured**")
+                        
+                        st.markdown("""
+                        <small style="color: #666;">
+                        This feature connects the app to a personal job tracker (Google Sheets) via n8n.
+                        It is currently disabled to ensure <b>complete privacy</b> for public users.
+                        </small>
+                        """, unsafe_allow_html=True)
+                        
+                        st.markdown("**Want to use this feature?** Check the source code to host your own PreAply.")
+                        st.link_button("View Source on GitHub", "https://github.com/albinurrosif/AI-Job-Analyzer-Strategy-Generator.git")
+                    
             except Exception as e:
                 st.error(f"An error occurred while processing the AI response: {e}")
                 st.markdown(st.session_state["analyze_result"])
