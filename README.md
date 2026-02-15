@@ -20,7 +20,7 @@ This project focuses on using Large Language Models (LLM) to perform gap analysi
 
 ### *Additional Feature (Demo)*
 - **🔗 Automation Integration:** A prototype feature that sends structured data (JSON) to an **n8n webhook** to log the application history.
-  - *Note: In the live demo, this feature is gated with an admin password.*
+  - *Note: This feature is gated with an admin password. You need to host this app and prepare your own Webhook URL from n8n to use this feature*
 
 ## 🛠️ Tech Stack
 
@@ -60,6 +60,25 @@ This project focuses on using Large Language Models (LLM) to perform gap analysi
     ```bash
     streamlit run app.py
     ```
+
+## ⚙️ Automation Setup (n8n)
+
+To utilize the tracker feature, you need to set up a simple workflow in n8n (or Zapier/Make).
+
+**The Flow:**
+`[Webhook Node] ➝ [Google Sheets Node]`
+
+**1. Webhook Configuration:**
+- **Method:** POST
+- **Payload Structure:** The app sends the following JSON body:
+  ```json
+  {
+    "company": "Target Company Name",
+    "role": "Target Role",
+    "match_score": "85",
+    "timestamp": "2026-02-16 10:00:00"
+  }
+
 
 ## 👨‍💻 Author
 
