@@ -78,6 +78,10 @@ To utilize the tracker feature, you need to set up a simple workflow in n8n (or 
     "match_score": "85",
     "timestamp": "2026-02-16 10:00:00"
   }
+  ```
+**2. Google Sheets Configuration:**
+- **Create a Sheet with these headers:** Date, Company, Role, Match Score.
+- **Map the JSON fields from the Webhook to the respective columns.**
 
 ---
 ## 👨‍💻 Author
