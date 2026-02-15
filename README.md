@@ -25,7 +25,7 @@ This project focuses on using Large Language Models (LLM) to perform gap analysi
 ## 🛠️ Tech Stack
 
 - **Frontend:** Streamlit
-- **AI Engine:** Google Gemini 2.0 Flash
+- **AI Engine:** Google Gemini 2.5 Flash
 - **Language:** Python
 - **Integration:** n8n (Webhook)
 
