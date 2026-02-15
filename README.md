@@ -33,7 +33,7 @@ This project focuses on using Large Language Models (LLM) to perform gap analysi
 
 1.  **Clone the repository**
     ```bash
-    git clone [https://github.com/albinurrosif/AI-Job-Analyzer-Strategy-Generator.git](https://github.com/albinurrosif/AI-Job-Analyzer-Strategy-Generator.git)
+    git clone https://github.com/albinurrosif/AI-Job-Analyzer-Strategy-Generator.git
     cd AI-Job-Analyzer-Strategy-Generator
     ```
 
