@@ -79,7 +79,7 @@ To utilize the tracker feature, you need to set up a simple workflow in n8n (or 
     "timestamp": "2026-02-16 10:00:00"
   }
 
-
+---
 ## 👨‍💻 Author
 
 **Albi Nur Rosif**
